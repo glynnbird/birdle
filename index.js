@@ -15,11 +15,23 @@ const state = require('./state.js')
 const previousState = state.load(solutionNumber)
 
 // output history
-const output = function(s) {
-  for(let i = 0; i < s.guesses ; i++) {
+const output = function (s) {
+  const lookup = {
+    correct: '🟩',
+    present: '🟨',
+    absent: '⬛'
+  }
+  for (let i = 0; i < s.guesses; i++) {
     console.log(s.history[i].output)
   }
-  if (previousState.guesses===6 && !previousState.history[5].correct) {
+  if (previousState.guesses > 0 && previousState.history[previousState.guesses - 1].correct) {
+    console.log(`\nBirdle ${solutionNumber} ${s.guesses}/6`)
+    console.log('')
+    for (let i = 0; i < s.guesses; i++) {
+      console.log(s.history[i].letterByLetter.map(letter => lookup[letter]).join(''))
+    }
+  }
+  if (previousState.guesses === 6 && !previousState.history[5].correct) {
     console.log(solution)
   }
 }
@@ -67,7 +79,7 @@ if (!allwords.includes(guess.toLowerCase())) {
   process.exit(6)
 }
 
-const matchSolution = function() {
+const matchSolution = function () {
   const retval = {
     letterByLetter: [],
     correct: true,
@@ -75,13 +87,13 @@ const matchSolution = function() {
     guess: guess
   }
   const correctLetters = []
-  for(let i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i++) {
     const letter = guess[i]
     if (solution[i] === letter) {
       correctLetters.push(letter)
     }
   }
-  for(let i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i++) {
     const letter = guess[i]
     if (solution[i] === letter) {
       retval.letterByLetter.push('correct')
