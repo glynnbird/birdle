@@ -103,9 +103,15 @@ const matchSolution = function() {
   return retval
 }
 
+const play = function () {
+  const response = matchSolution()
+  previousState.guesses++
+  previousState.history.push(response)
+  state.save(previousState)
+  output(previousState)
+}
 
-const response = matchSolution()
-previousState.guesses++
-previousState.history.push(response)
-state.save(previousState)
-output(previousState)
+module.exports = {
+  play
+}
+
